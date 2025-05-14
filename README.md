@@ -2,6 +2,8 @@
 
 A NestJS application that provides detailed information about countries, including borders, population trends, and national holidays. Users can also save selected holidays to their personal calendar.
 
+---
+
 ## 🚀 Getting Started
 
 ### 📁 Clone the Repository
@@ -11,51 +13,73 @@ git clone https://github.com/your-username/country-info-app.git
 cd country-info-app
 ```
 
+---
+
 ### ⚙️ Installation
 
 1. Make sure you have the following installed:
 
-   - [Node.js](https://nodejs.org/)
-   - [npm](https://www.npmjs.com/)
-   - [PostgreSQL](https://www.postgresql.org/)
+   - [Docker](https://www.docker.com/)
+   - [Node.js](https://nodejs.org/) (if not using Docker)
+   - [npm](https://www.npmjs.com/) (if not using Docker)
 
-2. Install dependencies:
+2. **Run with Docker Compose (Recommended)**:
 
-   ```bash
-   npm install
-   ```
-
-3. Copy the `.env.example` file and set your environment variables:
+   If you have Docker installed, you can quickly start the application and its dependencies (e.g., PostgreSQL) using `docker-compose`:
 
    ```bash
-   cp .env.example .env
+   docker-compose up
    ```
 
-4. Edit the `.env` file and provide your PostgreSQL database configuration:
+   This will start the application and PostgreSQL database in containers. The API will be available at: [http://localhost:3000](http://localhost:3000).
 
-   ```env
-   DB_HOST=localhost
-   DB_PORT=5432
-   DB_USERNAME=postgres
-   DB_PASSWORD=yourpassword
-   DB_DATABASE=country_db
-   NAGER_API=https://date.nager.at/api/v3
-   COUNTRIES_API=https://countriesnow.space/api/v0.1
-   ```
+3. **Manual Setup (Optional)**:
 
-5. Ensure your PostgreSQL server is running and the database exists.
+   If you prefer not to use Docker, follow these steps:
+
+   - Install dependencies:
+
+     ```bash
+     npm install
+     ```
+
+   - Copy the `.env.example` file and set your environment variables:
+
+     ```bash
+     cp .env.example .env
+     ```
+
+   - Edit the `.env` file and provide your PostgreSQL database configuration:
+
+     ```env
+     DB_HOST=localhost
+     DB_PORT=5432
+     DB_USERNAME=postgres
+     DB_PASSWORD=yourpassword
+     DB_DATABASE=country_db
+     NAGER_API=https://date.nager.at/api/v3
+     COUNTRIES_API=https://countriesnow.space/api/v0.1
+     ```
+
+   - Ensure your PostgreSQL server is running and the database exists.
 
 ---
 
 ## 🧪 Running the App
 
-1. Start the development server:
+1. **With Docker Compose**:
+
+   The application will already be running after executing `docker-compose up`.
+
+2. **Without Docker**:
+
+   Start the development server manually:
 
    ```bash
    npm run start:dev
    ```
 
-2. The API will be available at: [http://localhost:3000](http://localhost:3000)
+   The API will be available at: [http://localhost:3000](http://localhost:3000).
 
 ---
 

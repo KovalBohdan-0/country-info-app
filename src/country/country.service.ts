@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { lastValueFrom } from 'rxjs';
+import axios from 'axios';
 
 interface FlagResponse {
   flag: string;
@@ -54,36 +55,62 @@ export class CountryService {
   }
 
   private async getBorderCountries(countryCode: string) {
-    const response = await lastValueFrom(
-      this.httpService.get<{ borders: string[] }>(
-        `${this.configService.get('NAGER_API')}/CountryInfo/${countryCode}`,
-      ),
-    );
-    return response.data?.borders || [];
+    try {
+      const response = await lastValueFrom(
+        this.httpService.get<{ borders: string[] }>(
+          `${this.configService.get('NAGER_API')}/CountryInfo/${countryCode}`,
+        ),
+      );
+      return response.data?.borders || [];
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        throw new BadRequestException(
+          `Invalid country code: ${countryCode}. Please provide a valid country code.`,
+        );
+      }
+      throw new Error('An error occurred while fetching border countries');
+    }
   }
 
   private async getPopulationData(countryCode: string): Promise<any[]> {
-    const response = await lastValueFrom(
-      this.httpService.get<PopulationResponse>(
-        `${this.configService.get('COUNTRIES_API')}/countries/population`,
-        {
-          params: { country: countryCode },
-        },
-      ),
-    );
-
-    return response.data?.data || [];
+    try {
+      const response = await lastValueFrom(
+        this.httpService.get<PopulationResponse>(
+          `${this.configService.get('COUNTRIES_API')}/countries/population`,
+          {
+            params: { country: countryCode },
+          },
+        ),
+      );
+      return response.data?.data || [];
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        throw new BadRequestException(
+          `Invalid country code: ${countryCode}. Please provide a valid country code.`,
+        );
+      }
+      throw new Error('An error occurred while fetching population data');
+    }
   }
 
   private async getFlagUrl(countryCode: string): Promise<string> {
-    const response = await lastValueFrom(
-      this.httpService.get<FlagResponse>(
-        `${this.configService.get('COUNTRIES_API')}/countries/flag/images`,
-        {
-          params: { country: countryCode },
-        },
-      ),
-    );
-    return response.data?.flag || '';
+    try {
+      const response = await lastValueFrom(
+        this.httpService.get<FlagResponse>(
+          `${this.configService.get('COUNTRIES_API')}/countries/flag/images`,
+          {
+            params: { country: countryCode },
+          },
+        ),
+      );
+      return response.data?.flag || '';
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        throw new BadRequestException(
+          `Invalid country code: ${countryCode}. Please provide a valid country code.`,
+        );
+      }
+      throw new Error('An error occurred while fetching flag data');
+    }
   }
 }

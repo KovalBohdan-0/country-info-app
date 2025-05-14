@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: country_info
+    ports:
+      - 5432:5432
+
+  backend:
+    build: ./
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: country_info
+      NAGER_API: https://date.nager.at/api/v3
+      COUNTRIES_API: https://countriesnow.space/api/v0.1
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
